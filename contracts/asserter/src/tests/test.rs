@@ -142,13 +142,15 @@ fn main() {
                 contract_addr: mock_addr.to_string(),
                 msg: to_binary(&QueyMsgMock::GetState {}).unwrap(),
             }),
-            path_key: Some(vec![PathKey {
-                key_type: KeyType::String {},
-                value: "list".to_string(),
-            }, PathKey {
-                key_type: KeyType::ArrayIndex {},
-                value: "1".to_string(),
-            }
+            path_key: Some(vec![
+                PathKey {
+                    key_type: KeyType::String {},
+                    value: "list".to_string(),
+                },
+                PathKey {
+                    key_type: KeyType::ArrayIndex {},
+                    value: "1".to_string(),
+                },
             ]),
             assert_with: Some(AssertInfo {
                 data_type: DataType::String {},
@@ -159,6 +161,6 @@ fn main() {
     };
 
     let _res = app
-    .execute_contract(owner.clone(), asserter_addr, &msg, &[])
-    .unwrap();
+        .execute_contract(owner.clone(), asserter_addr, &msg, &[])
+        .unwrap();
 }
