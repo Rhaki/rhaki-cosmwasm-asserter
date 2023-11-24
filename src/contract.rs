@@ -166,8 +166,33 @@ pub fn compare_number<A: PartialEq + PartialOrd + Display>(
         AssertOperator::Lesser => val < comp,
         AssertOperator::LesserEqual => val <= comp,
         AssertOperator::Equal => val == comp,
+        AssertOperator::NotEqual => val != comp,
         AssertOperator::Greater => val > comp,
         AssertOperator::GreaterEqual => val >= comp,
+    } {
+        return Err(ContractError::AssertFailed {
+            value_origin: val.to_string(),
+            value_to_compare: comp.to_string(),
+            operator,
+        });
+    }
+    Ok(())
+}
+
+pub fn compare_string(
+    val: String,
+    comp: String,
+    operator: AssertOperator,
+) -> Result<(), ContractError> {
+    if !match operator {
+        AssertOperator::Equal => val == comp,
+        AssertOperator::NotEqual => val != comp,
+        _ => {
+            return Err(ContractError::AssertTypeNotValid {
+                value_type: DataType::String,
+                operator,
+            })
+        }
     } {
         return Err(ContractError::AssertFailed {
             value_origin: val.to_string(),

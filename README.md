@@ -14,9 +14,22 @@ However one of the biggest limitations is the possibility to perform queries aft
 To solve this, tou can append a msg to your tx to this contract, specify a list of query and the filed of thw QueryResponse that you want to append to the log.
 If you don't want to assert the value but just add to the tx log the request, leave the `assert_with` field as None.
 
+## Addresses
+
+|Chain | Address |
+|------|---------|
+|Terra (MainNet) | terra155uyc9e3qxa4j6d8a068jjugawt720snd67kvgklm0pw8hfclj3qdxld8h |
+|Terra (Testnet) | terra12rmgw28hawrl8jmmeete057gysstgu8lldtjca3luhj62qt0rq9qjllfz4 |
+
 ## How to use
 
+Execute a msg to asserter contract:
+
 ```rust
+pub enum ExecuteMsg {
+    Queries { queries: Vec<QueryToAssert> },
+}
+
 pub struct QueryToAssert {
     pub request: QueryRequest<Empty>,
     pub path_key: Option<Vec<PathKey>>,   
@@ -25,9 +38,8 @@ pub struct QueryToAssert {
 ```
 
 - `request`: `QueryRequest` to be execute
-- `path_key`: In case `QueryResult` is a struct an not a value, you can specify a `PathKey` that indicate to the contract the location of the field to read.
-
-## **PathKey**
+- `path_key`: In case `QueryResult` is a struct an not a single value, you can specify a `PathKey` that indicate to the `asserter contract` the location of the field to read.
+- `assert_with`: if specified, `asserter contract` try to assert the `QueryResponse` (or the value given by the `path_key`) with the specified value and operator
 
 ```rust
 pub struct PathKey {
@@ -39,11 +51,30 @@ pub enum KeyType {
     ArrayIndex,
     String,
 }
+
+pub struct AssertInfo {
+    pub data_type: DataType,
+    pub value: String,
+    pub operator: AssertOperator,
+}
+
+pub enum DataType {
+    Int,
+    String,
+    Decimal,
+}
+
+pub enum AssertOperator {
+    Lesser,
+    LesserEqual,
+    Equal,
+    Greater,
+    GreaterEqual,
+}
 ```
 
 - `key_type`: Indicate if the key is a `json` key as `String` or a `ArrayIndex`;
 - `value`: is the name of the key, or the index of the array.
-
 ### Example:
 
 `QueryResponse` struct
@@ -68,29 +99,6 @@ let path_key = Some(vec![
 ])
 ```
 
-## **AssertInfo**
-
-```rust
-pub struct AssertInfo {
-    pub data_type: DataType,
-    pub value: String,
-    pub operator: AssertOperator,
-}
-
-pub enum DataType {
-    Int,
-    String,
-    Decimal,
-}
-
-pub enum AssertOperator {
-    Lesser,
-    LesserEqual,
-    Equal,
-    Greater,
-    GreaterEqual,
-}
-```
 
 ### Example (assert the value of `key_5` = `5`):
 

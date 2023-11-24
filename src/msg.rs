@@ -46,6 +46,7 @@ pub enum AssertOperator {
     Lesser,
     LesserEqual,
     Equal,
+    NotEqual,
     Greater,
     GreaterEqual,
 }
@@ -56,6 +57,7 @@ impl fmt::Display for AssertOperator {
             AssertOperator::Lesser => write!(f, "lesser"),
             AssertOperator::LesserEqual => write!(f, "lesser_equal"),
             AssertOperator::Equal => write!(f, "equal"),
+            AssertOperator::NotEqual => write!(f, "not_equal"),
             AssertOperator::Greater => write!(f, "greater"),
             AssertOperator::GreaterEqual => write!(f, "greater_equal"),
         }

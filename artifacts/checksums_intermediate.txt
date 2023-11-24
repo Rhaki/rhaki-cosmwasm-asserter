@@ -1,1 +1,0 @@
-9c98a53865fbd3cecade4ac9e278df8cdc6674267633310da54404276addcdec  target/wasm32-unknown-unknown/release/asserter.wasm
