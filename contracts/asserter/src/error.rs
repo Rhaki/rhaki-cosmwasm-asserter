@@ -8,17 +8,13 @@ pub enum ContractError {
     #[error("{0}")]
     Std(#[from] StdError),
 
-    #[error("Unauthorized")]
-    Unauthorized {},
-    // Add any other custom errors you like here.
-    // Look at https://docs.rs/thiserror/1.0.21/thiserror/ for details.
     #[error("KeyType invalid for key {key:?}")]
     DataTypeNotValueForKey { key: KeyType },
 
     #[error("Unreconizied type")]
     UnreconiziedType {},
 
-    #[error("Assert failed for value {value_origin:?} compared with {value_to_compare:} for the operator {operator:?}")]
+    #[error("Assert failed for value {value_origin} compared with {value_to_compare} for the operator {operator:?}")]
     AssertFailed {
         value_origin: String,
         value_to_compare: String,

@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use cosmwasm_std::{to_binary, Addr, Decimal, Empty, QueryRequest, Uint128, WasmQuery};
+use cosmwasm_std::{to_json_binary, Addr, Decimal, Empty, QueryRequest, Uint128, WasmQuery};
 use cw_multi_test::{App, Contract, ContractWrapper, Executor};
 
 use super::mock::{
@@ -95,7 +95,7 @@ fn main() {
         queries: vec![QueryToAssert {
             request: QueryRequest::Wasm(WasmQuery::Smart {
                 contract_addr: mock_addr.to_string(),
-                msg: to_binary(&QueyMsgMock::GetValue {}).unwrap(),
+                msg: to_json_binary(&QueyMsgMock::GetValue {}).unwrap(),
             }),
             path_key: None,
             assert_with: Some(AssertInfo {
@@ -116,7 +116,7 @@ fn main() {
         queries: vec![QueryToAssert {
             request: QueryRequest::Wasm(WasmQuery::Smart {
                 contract_addr: mock_addr.to_string(),
-                msg: to_binary(&QueyMsgMock::GetState {}).unwrap(),
+                msg: to_json_binary(&QueyMsgMock::GetState {}).unwrap(),
             }),
             path_key: Some(vec![PathKey {
                 key_type: KeyType::String {},
@@ -140,7 +140,7 @@ fn main() {
         queries: vec![QueryToAssert {
             request: QueryRequest::Wasm(WasmQuery::Smart {
                 contract_addr: mock_addr.to_string(),
-                msg: to_binary(&QueyMsgMock::GetState {}).unwrap(),
+                msg: to_json_binary(&QueyMsgMock::GetState {}).unwrap(),
             }),
             path_key: Some(vec![
                 PathKey {
@@ -161,6 +161,54 @@ fn main() {
     };
 
     let _res = app
-        .execute_contract(owner.clone(), asserter_addr, &msg, &[])
+        .execute_contract(owner.clone(), asserter_addr.clone(), &msg, &[])
         .unwrap();
+
+    // INDEX NUMBER
+
+    let msg = ExecuteMsg::Queries {
+        queries: vec![QueryToAssert {
+            request: QueryRequest::Wasm(WasmQuery::Smart {
+                contract_addr: mock_addr.to_string(),
+                msg: to_json_binary(&QueyMsgMock::GetState {}).unwrap(),
+            }),
+            path_key: Some(vec![PathKey {
+                key_type: KeyType::String {},
+                value: "amount".to_string(),
+            }]),
+            assert_with: Some(AssertInfo {
+                data_type: DataType::Decimal,
+                value: "1.3".to_string(),
+                operator: AssertOperator::Lesser,
+            }),
+        }],
+    };
+
+    let _res = app
+        .execute_contract(owner.clone(), asserter_addr.clone(), &msg, &[])
+        .unwrap();
+
+    // INDEX NUMBER FAIL
+
+    let msg = ExecuteMsg::Queries {
+        queries: vec![QueryToAssert {
+            request: QueryRequest::Wasm(WasmQuery::Smart {
+                contract_addr: mock_addr.to_string(),
+                msg: to_json_binary(&QueyMsgMock::GetState {}).unwrap(),
+            }),
+            path_key: Some(vec![PathKey {
+                key_type: KeyType::String {},
+                value: "amount".to_string(),
+            }]),
+            assert_with: Some(AssertInfo {
+                data_type: DataType::Decimal,
+                value: "1.1".to_string(),
+                operator: AssertOperator::Lesser,
+            }),
+        }],
+    };
+
+    let _res = app
+        .execute_contract(owner.clone(), asserter_addr, &msg, &[])
+        .unwrap_err();
 }

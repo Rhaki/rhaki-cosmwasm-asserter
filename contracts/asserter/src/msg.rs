@@ -1,40 +1,38 @@
 use core::fmt;
 
+use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Empty, QueryRequest};
-use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
 
 // --- ENTRY POINT ---
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
+#[cw_serde]
 pub struct InstantiateMsg {}
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum ExecuteMsg {
     Queries { queries: Vec<QueryToAssert> },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
+
 pub enum QueryMsg {}
 
 // --- STRUCTURES ---
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
+#[cw_serde]
 pub struct QueryToAssert {
     pub request: QueryRequest<Empty>,
     pub path_key: Option<Vec<PathKey>>,
     pub assert_with: Option<AssertInfo>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
+#[cw_serde]
 pub struct PathKey {
     pub key_type: KeyType,
     pub value: String,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
+#[cw_serde]
 pub struct AssertInfo {
     pub data_type: DataType,
     pub value: String,
@@ -43,39 +41,36 @@ pub struct AssertInfo {
 
 // --- ENUMS ---
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum AssertOperator {
-    Lesser {},
-    LesserEqual {},
-    Equal {},
-    Greater {},
-    GreaterEqual {},
+    Lesser,
+    LesserEqual,
+    Equal,
+    Greater,
+    GreaterEqual,
 }
 
 impl fmt::Display for AssertOperator {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            AssertOperator::Lesser {} => write!(f, "lesser"),
-            AssertOperator::LesserEqual {} => write!(f, "lesser_equal"),
-            AssertOperator::Equal {} => write!(f, "equal"),
-            AssertOperator::Greater {} => write!(f, "greater"),
-            AssertOperator::GreaterEqual {} => write!(f, "greater_equal"),
+            AssertOperator::Lesser => write!(f, "lesser"),
+            AssertOperator::LesserEqual => write!(f, "lesser_equal"),
+            AssertOperator::Equal => write!(f, "equal"),
+            AssertOperator::Greater => write!(f, "greater"),
+            AssertOperator::GreaterEqual => write!(f, "greater_equal"),
         }
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum DataType {
-    Int {},
-    String {},
-    Decimal {},
+    Int,
+    String,
+    Decimal,
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum KeyType {
-    ArrayIndex {},
-    String {},
+    ArrayIndex,
+    String,
 }

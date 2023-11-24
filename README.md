@@ -36,8 +36,8 @@ pub struct PathKey {
 }
 
 pub enum KeyType {
-    ArrayIndex {},
-    String {},
+    ArrayIndex,
+    String,
 }
 ```
 
@@ -63,8 +63,8 @@ If you want to read the value of `key_5`, the `path_key` field will be:
 
 ```rust
 let path_key = Some(vec![
-    PathKey{ key_type: KeyType::String{}, value: "key_3"},
-    PathKey{ key_type: KeyType::String{}, value: "key_5"}
+    PathKey{ key_type: KeyType::String, value: "key_3"},
+    PathKey{ key_type: KeyType::String, value: "key_5"}
 ])
 ```
 
@@ -78,17 +78,17 @@ pub struct AssertInfo {
 }
 
 pub enum DataType {
-    Int {},
-    String {},
-    Decimal {},
+    Int,
+    String,
+    Decimal,
 }
 
 pub enum AssertOperator {
-    Lesser {},
-    LesserEqual {},
-    Equal {},
-    Greater {},
-    GreaterEqual {},
+    Lesser,
+    LesserEqual,
+    Equal,
+    Greater,
+    GreaterEqual,
 }
 ```
 
@@ -96,9 +96,9 @@ pub enum AssertOperator {
 
 ```rust
 let assert_info = AssertInfo{
-    data_type: DataType::Int{}.
+    data_type: DataType::Int.
     value: "5"
-    operator = AssertOperator::Equal{}
+    operator = AssertOperator::Equal
 }
 ```
 

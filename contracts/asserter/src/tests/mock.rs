@@ -1,6 +1,6 @@
 use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::{
-    to_binary, Addr, Binary, Decimal, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128,
+    to_json_binary, Addr, Binary, Decimal, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128,
 };
 
 #[cfg(not(feature = "library"))]
@@ -69,7 +69,7 @@ pub fn execute(
 #[entry_point]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::GetValue {} => to_binary(&VALUE.load(deps.storage)?),
-        QueryMsg::GetState {} => to_binary(&STATE.load(deps.storage)?),
+        QueryMsg::GetValue {} => to_json_binary(&VALUE.load(deps.storage)?),
+        QueryMsg::GetState {} => to_json_binary(&STATE.load(deps.storage)?),
     }
 }
